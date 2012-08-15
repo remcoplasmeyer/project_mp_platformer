@@ -1,4 +1,13 @@
 #################
+# Own
+#################
+
+.debug_build/
+.release_build/
+.sconsign.dblite
+
+
+#################
 ## Eclipse
 #################
 
