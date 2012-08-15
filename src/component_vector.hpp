@@ -2,24 +2,29 @@
 
 #include "world.hpp"
 #include <boost/utility.hpp>
+#include <boost/iterator/indirect_iterator.hpp>
 #include <vector>
 #include <memory>
 
 //! Class used for the world register components with.
 template<typename T>
 class ComponentVector : boost::noncopyable {
-    typedef typename std::vector<std::shared_ptr<T>>::iterator Iterator;
-    std::vector<std::shared_ptr<T>> components_;
+    std::vector<T*> components_;
   public:
+    typedef boost::indirect_iterator<typename std::vector<T*>::iterator> Iterator;
+    typedef boost::indirect_iterator<typename std::vector<T*>::const_iterator> ConstIterator;
+
     //! Listen to the given world.
     ComponentVector(World&);
 
     //! Called by World to notify of a new component.
-    void add_component(std::shared_ptr<T>);
+    void add_component(T*);
 
-    // Temporary to allow for use in range-based for loops.
-    // TODO: Make iterators refer to T, not std::shared_ptr<T>.
     Iterator begin() {
+        return components_.begin();
+    }
+
+    ConstIterator begin() const {
         return components_.begin();
     }
  
@@ -27,7 +32,9 @@ class ComponentVector : boost::noncopyable {
         return components_.end();
     }
 
-    // TODO: Access functions 
+    ConstIterator end() const {
+        return components_.end();
+    }
 };
 
  
@@ -37,7 +44,7 @@ ComponentVector<T>::ComponentVector(World& world) {
 }
  
 template<typename T>
-void ComponentVector<T>::add_component(std::shared_ptr<T> comp) {
+void ComponentVector<T>::add_component(T* comp) {
     components_.push_back(comp);
 }
  

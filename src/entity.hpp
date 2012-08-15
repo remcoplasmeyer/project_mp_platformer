@@ -8,7 +8,7 @@
 //! Represents any in-game object.
 class Entity {
     World* world_;
-    std::vector<std::shared_ptr<boost::any>> components_;
+    std::vector<boost::any> components_;
     
   public:
     //! Construct an entity residing in the given world.
@@ -25,9 +25,7 @@ class Entity {
  
 template<typename T, typename... Args>
 void Entity::add_component(Args&&... args) {
-    // Note: not thread safe.
-    // On the other hand, push_backing to a vector isn't either.
-    components_.emplace_back(std::forward<Args>(args)...);
-    world_->register_component(components_.back());
+    components_.push_back(T(std::forward<Args>(args)...));
+    world_->register_component(boost::any_cast<T>(&components_.back()));
 }
  

@@ -37,9 +37,13 @@ class World {
     
     //! Register a newly-created component.
     template<typename T>
-    void register_component(std::shared_ptr<T>);
+    void register_component(T*);
+
+    //! Request that all systems update with the given timestep.
+    void update(int deltat);
 };
- 
+
+#include <iostream>
 
 template<typename T>
 void World::request_registration(ComponentVector<T>& ca) {
@@ -52,8 +56,9 @@ void World::add_system(Args... args) {
 }
  
 template<typename T>
-void World::register_component(std::shared_ptr<T> comp) {
-    for (auto vector : component_vectors_.get<T>())
+void World::register_component(T* comp) {
+    for (auto vector : component_vectors_.get<T>()) {
         vector->add_component(comp);
+    }
 }
  
