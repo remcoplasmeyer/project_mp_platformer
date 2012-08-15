@@ -1,9 +1,11 @@
+#include "components/base.hpp"
 #include "entity.hpp"
 #include "world.hpp"
-#include "component_vector.hpp"
+#include "component_list.hpp"
 #define BOOST_TEST_MODULE GeneralEntitySystem
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
+
 
 BOOST_AUTO_TEST_CASE(make_empty_entity) {
     World world;
@@ -12,22 +14,26 @@ BOOST_AUTO_TEST_CASE(make_empty_entity) {
 
 
 BOOST_AUTO_TEST_CASE(ensure_component_is_registered) {
-    struct TestComponent {
+    struct TestComponent : BaseComponent {
         TestComponent() : x(0) {}
         int x;
     };
     class TestSystem : public System {
-        ComponentVector<TestComponent> vec_;
+        World* world_;
         void do_update(int) {
             // Can't use BOOST_CHECK_NE because the Iterator isn't printable.
-            BOOST_ASSERT(vec_.begin() != vec_.end());
-            auto it = vec_.begin();
-            BOOST_CHECK_EQUAL(it->x, 0);
-            it->x++;
-            BOOST_CHECK_EQUAL(it->x, 1);
+            auto& test_comps = world_->get_components<TestComponent>();
+            BOOST_ASSERT(test_comps.begin() != test_comps.end());
+            auto it = test_comps.begin();
+            BOOST_ASSERT(!it->expired());
+            auto p = it->lock();
+            BOOST_ASSERT(p);
+            BOOST_CHECK_EQUAL(p->x, 0);
+            p->x++;
+            BOOST_CHECK_EQUAL(p->x, 1);
         }
       public:
-        TestSystem(World& world) : vec_(world) {}
+        TestSystem(World& world) : world_(&world) {}
     };
     World world;
     world.add_system<TestSystem>();
@@ -35,3 +41,4 @@ BOOST_AUTO_TEST_CASE(ensure_component_is_registered) {
     e.add_component<TestComponent>();
     world.update(1);
 }
+

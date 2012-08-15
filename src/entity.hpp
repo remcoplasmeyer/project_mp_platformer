@@ -1,14 +1,15 @@
 #pragma once
 
 #include "world.hpp"
-#include <boost/any.hpp>
 #include <memory>
 #include <vector>
+
+class BaseComponent;
 
 //! Represents any in-game object.
 class Entity {
     World* world_;
-    std::vector<boost::any> components_;
+    std::vector<std::shared_ptr<BaseComponent>> components_;
     
   public:
     //! Construct an entity residing in the given world.
@@ -25,7 +26,8 @@ class Entity {
  
 template<typename T, typename... Args>
 void Entity::add_component(Args&&... args) {
-    components_.push_back(T(std::forward<Args>(args)...));
-    world_->register_component(boost::any_cast<T>(&components_.back()));
+    auto comp = std::make_shared<T>(std::forward<Args>(args)...);
+    components_.push_back(comp);
+    world_->register_component(std::weak_ptr<T>(comp));
 }
  

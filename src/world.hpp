@@ -6,59 +6,54 @@
 #include <boost/ptr_container/ptr_vector.hpp>
 
 template<typename T>
-class ComponentVector;
+class ComponentList;
 
 //! A single gameplay instance.
 class World {
-    // More specialised class for working with vectors of component
-    // vectors.
+    // More specialised class for working with component lists.
+    // Handy because we want to associate T with ComponentList<T>.
     class WorldTypeMap : boost::noncopyable {
         TypeMap map_;
       public:
         template<typename T>
-        std::vector<ComponentVector<T>*>& get() {
-            return map_.get<std::vector<ComponentVector<T>*>>();
+        ComponentList<T>& get() {
+            return map_.get<ComponentList<T>>();
         }
-    } component_vectors_;
+    } component_lists_;
  
     boost::ptr_vector<System> systems_;
  
   public:
-    //! Request that all new T components be registered with
-    //! the given ComponentVector<T> instance.
-    template<typename T>
-    void request_registration(ComponentVector<T>&);
-
     //! Construct a new subsystem with the given type.
     //!
     //! Arguments are forwarded to the constructor of T.
     template<typename T, typename... Args>
     void add_system(Args... args);
     
-    //! Register a newly-created component.
+    //! Access a component list for a given type.
     template<typename T>
-    void register_component(T*);
+    ComponentList<T>& get_components();
+
+    template<typename T>
+    void register_component(std::weak_ptr<T>);
 
     //! Request that all systems update with the given timestep.
     void update(int deltat);
 };
 
-#include <iostream>
-
-template<typename T>
-void World::request_registration(ComponentVector<T>& ca) {
-    component_vectors_.get<T>().push_back(&ca);
-}
- 
 template<typename T, typename... Args>
 void World::add_system(Args... args) {
     systems_.push_back(new T(*this, std::forward<Args>(args)...));
 }
+
+template<typename T>
+void World::register_component(std::weak_ptr<T> comp) {
+    get_components<T>().add_component(comp);
+}
+
  
 template<typename T>
-void World::register_component(T* comp) {
-    for (auto vector : component_vectors_.get<T>()) {
-        vector->add_component(comp);
-    }
+ComponentList<T>& World::get_components() {
+    return component_lists_.get<T>();
 }
  
