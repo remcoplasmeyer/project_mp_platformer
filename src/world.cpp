@@ -1,4 +1,10 @@
 #include "world.hpp"
+#include "entity.hpp"
+
+Entity& World::new_entity() {
+    entities_.emplace_back(*this);
+    return entities_.back();
+}
 
 void World::update(int deltat) {
     for (auto& system : systems_)

@@ -22,9 +22,13 @@ class Entity {
     
   public:
     //! Construct an entity residing in the given world.
+    //!
+    //! Only makes sense to call this from World::new_entity().
+    //! TODO: Figure out a way to enforce this compile-time.  Maybe
+    //! Entity should be a member class of World?
     Entity(World&);
 
-    //! Construct a component on this entity.
+    //! Add a component to this entity.
     //!
     //! Arguments are passed on to the constructor of the component.
     template<typename T, typename... Args>

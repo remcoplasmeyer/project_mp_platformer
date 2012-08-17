@@ -6,10 +6,9 @@
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 
-
 BOOST_AUTO_TEST_CASE(make_empty_entity) {
     World world;
-    Entity e(world);
+    world.new_entity();
 }
 
 
@@ -37,7 +36,7 @@ BOOST_AUTO_TEST_CASE(ensure_component_is_registered) {
     };
     World world;
     world.add_system<TestSystem>();
-    Entity e(world);
+    auto& e = world.new_entity();
     e.add_component<TestComponent>();
     world.update(1);
 }

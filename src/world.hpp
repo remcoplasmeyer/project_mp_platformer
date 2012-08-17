@@ -6,14 +6,13 @@
 #include <boost/utility.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 
-template<typename T>
-class ComponentList;
+class Entity;
 
 //! A single gameplay instance.
 class World {
     // More specialised class for working with component lists.
     // Handy because we want to associate T with ComponentList<T>.
-    class WorldTypeMap : boost::noncopyable {
+    class : boost::noncopyable {
         TypeMap map_;
       public:
         template<typename T>
@@ -23,8 +22,12 @@ class World {
     } component_lists_;
  
     boost::ptr_vector<System> systems_;
+    std::vector<Entity> entities_;
  
   public:
+    //! Create a new entity in this world.
+    Entity& new_entity();
+
     //! Construct a new subsystem with the given type.
     //!
     //! Arguments are forwarded to the constructor of T.

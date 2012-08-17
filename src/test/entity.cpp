@@ -7,7 +7,7 @@
 
 BOOST_AUTO_TEST_CASE(add_component_without_awareness) {
     World world;
-    Entity e(world);
+    auto& e = world.new_entity();
     e.add_component<BaseComponent>();
     auto& comp = world.get_components<BaseComponent>();
     BOOST_ASSERT(comp.begin() != comp.end());
@@ -17,7 +17,7 @@ BOOST_AUTO_TEST_CASE(add_component_without_awareness) {
 
 BOOST_AUTO_TEST_CASE(add_component_with_entity_awareness) {
     World world;
-    Entity e(world);
+    auto& e = world.new_entity();
     e.add_component<EntityTrackingComponent>();
     auto& comp = world.get_components<EntityTrackingComponent>();
     BOOST_ASSERT(comp.begin() != comp.end());
