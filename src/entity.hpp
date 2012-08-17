@@ -2,6 +2,7 @@
 
 #include "components/base.hpp"
 #include "world.hpp"
+#include <boost/utility.hpp>
 #include <memory>
 #include <vector>
 
@@ -14,7 +15,10 @@ class EntityCreationWorld {
 };
 
 //! Represents any in-game object.
-class Entity {
+//!
+//! Not copyable because we keep references to it that really
+//! should not be invalidated.
+class Entity : boost::noncopyable {
     World* world_;
     std::vector<std::shared_ptr<BaseComponent>> components_;
 

@@ -22,7 +22,7 @@ class World {
     } component_lists_;
  
     boost::ptr_vector<System> systems_;
-    std::vector<Entity> entities_;
+    std::vector<std::shared_ptr<Entity>> entities_;
  
   public:
     //! Create a new entity in this world.
