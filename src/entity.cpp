@@ -1,4 +1,6 @@
 #include "entity.hpp"
 
-Entity::Entity(World& world) : world_(&world) {}
+Entity::Entity(EntityCreationWorld ecw) :
+    world_(ecw.world_)
+{}
  

@@ -5,6 +5,14 @@
 #include <memory>
 #include <vector>
 
+// Hack to make sure only new_entity can create Entities.
+class EntityCreationWorld {
+    friend Entity& World::new_entity();
+    EntityCreationWorld(World& world) : world_(&world) {}
+  public:
+    World* world_;
+};
+
 //! Represents any in-game object.
 class Entity {
     World* world_;
@@ -22,11 +30,7 @@ class Entity {
     
   public:
     //! Construct an entity residing in the given world.
-    //!
-    //! Only makes sense to call this from World::new_entity().
-    //! TODO: Figure out a way to enforce this compile-time.  Maybe
-    //! Entity should be a member class of World?
-    Entity(World&);
+    Entity(EntityCreationWorld);
 
     //! Add a component to this entity.
     //!
