@@ -22,7 +22,7 @@ BOOST_AUTO_TEST_CASE(send_message_async) {
     LocalByteSender sender(lmq);
     LocalByteReceiver receiver(lmq);
     Message msg{0,1,2,3,4,5,6,7};
-    auto future = std::async([&](){ return receiver.block_until_message(); });
+    auto future = std::async(std::launch::async, [&](){ return receiver.block_until_message(); });
     auto result = future.wait_for(std::chrono::microseconds(20));
     BOOST_CHECK(result == std::future_status::timeout);
     sender.send(msg);
