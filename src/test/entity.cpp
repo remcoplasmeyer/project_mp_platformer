@@ -2,7 +2,7 @@
 #include "entity.hpp"
 #include "world.hpp"
 #include "system.hpp"
-#define BOOST_TEST_MODULE Entity
+#define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_CASE(add_component_without_awareness) {

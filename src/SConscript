@@ -1,7 +1,7 @@
 Import('env')
 Import('prefix')
 
-core_sources = Glob('*.cpp')
+core_sources = Glob('*.cpp') + Glob('network/*.cpp')
 client_sources = Glob('client/*.cpp') + core_sources + Glob('client/standalone/*.cpp')
 server_sources = Glob('server/*.cpp') + core_sources + Glob('server/standalone/*.cpp')
 test_sources = Glob('test/*.cpp') + core_sources
