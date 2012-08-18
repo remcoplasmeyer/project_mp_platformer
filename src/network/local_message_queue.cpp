@@ -1,6 +1,5 @@
 #include "network/local_message_queue.hpp"
 #include <condition_variable>
-#include <iostream>
 #include <chrono>
 
 void LocalMessageQueue::enqueue(Message const& message) {
