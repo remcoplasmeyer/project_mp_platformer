@@ -20,9 +20,11 @@
 #include "network/local_byte_sender.hpp"
 #include "network/local_byte_receiver.hpp"
 #include "network/local_message_queue.hpp"
+#include "systems/window.hpp"
 #include "utility.hpp"
 #include "world.hpp"
 #include <thread>
+#include <iostream>
 
 void server_do(std::unique_ptr<IByteSender>&& b_sender, std::unique_ptr<IByteReceiver>&& b_receiver) {
     World world;
@@ -34,10 +36,13 @@ void client_do(std::unique_ptr<IByteSender>&& b_sender, std::unique_ptr<IByteRec
     World world;
     Sender sender(std::move(b_sender));
     Receiver<World> receiver(world, std::move(b_receiver));
+    world.add_system<WindowSystem>();
+    for (;;)
+        world.update(1);
 }
 
 int main() {
     LocalMessageQueue server_to_client, client_to_server;
     std::thread(server_do, make_unique<LocalByteSender>(server_to_client), make_unique<LocalByteReceiver>(client_to_server)).detach();
-    std::thread(client_do, make_unique<LocalByteSender>(client_to_server), make_unique<LocalByteReceiver>(server_to_client)).detach();
+    std::thread(client_do, make_unique<LocalByteSender>(client_to_server), make_unique<LocalByteReceiver>(server_to_client)).join();
 }

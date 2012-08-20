@@ -2,13 +2,17 @@
 
 #include <boost/utility.hpp>
 
+class World;
+
 class System : boost::noncopyable {
+    // Currently unused, will later be responsible for
+    // the event queue.
+    World* world_;
   private:
     virtual void do_update(int deltat) = 0;
   public:
-    void update(int deltat) {
-        do_update(deltat);
-    }
-    virtual ~System() {}
+    System(World&);
+    void update(int deltat);
+    virtual ~System();
 };
  

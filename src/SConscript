@@ -1,14 +1,14 @@
 Import('env')
 Import('prefix')
 
-core_sources = Glob('*.cpp') + Glob('network/*.cpp')
+core_sources = Glob('*.cpp') + Glob('network/*.cpp') + Glob('systems/*.cpp')
 client_sources = Glob('client/*.cpp') + core_sources + Glob('client/standalone/*.cpp')
 server_sources = Glob('server/*.cpp') + core_sources + Glob('server/standalone/*.cpp')
 test_sources = Glob('test/*.cpp') + core_sources
 
 # Temporary hack to get rid of double action error.
 # Will fix by turning most of the program into a static library.
-env.MergeFlags({'LIBS': ['boost_unit_test_framework']})
+env.MergeFlags({'LIBS': ['boost_unit_test_framework', 'sfml-window']})
 
 env.Program(''.join(['#bin/', prefix, 'client']), client_sources)
 env.Program(''.join(['#bin/', prefix, 'server']), server_sources)
