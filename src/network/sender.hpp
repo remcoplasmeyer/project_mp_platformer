@@ -7,7 +7,7 @@ class IByteSender;
 class Sender {
     std::unique_ptr<IByteSender> byte_sender_;
   public:
-    Sender(IByteSender*);
+    Sender(std::unique_ptr<IByteSender>&&);
     template<typename T>
     void Send(T const& t);
 };
