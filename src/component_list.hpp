@@ -14,7 +14,13 @@ class ComponentList {
     typedef typename ContainerType::iterator Iterator;
     typedef typename ContainerType::const_iterator ConstIterator;
 
-    //! Called by World to notify of a new component.
+    //! Adds a component to the list.
+    //!
+    //! Note that adding components while iterating *will* invalidate iterators
+    //! and if tha doesn't break anything, they probably *will* be iterated over
+    //! unless you rely on that happening.
+    //!
+    //! Long story short, don't add components while iterating.
     void add_component(T);
 
     Iterator begin() {

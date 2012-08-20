@@ -7,7 +7,7 @@
 
 class World;
 
-// Hack to make sure only new_entity can create Entities.
+// Hack to make sure all creation of Entities happens through a world.
 class EntityCreationWorld {
     friend class World;
     EntityCreationWorld(World& world) : world_(&world) {}
@@ -52,7 +52,6 @@ template<typename T>
 void Entity::add_component(std::shared_ptr<T> comp) {
     ASSERT(comp && "Trying to add null component.");
     component_lists_.get<T>().add_component(comp);
-    world_->register_component(std::weak_ptr<T>(comp));
 }
  
 template<typename T>

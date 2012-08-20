@@ -6,7 +6,12 @@
 
 typedef boost::error_info<struct tag_error_info, std::string> err_msg;
 
+//! All errors we use should derive from BaseError.
+//!
+//! Please don't catch BaseError itself, as you'd also be catching all
+//! FatalErrors.
 struct BaseError : virtual boost::exception, virtual std::exception {};
+struct RecoverableError : BaseError {};
 struct FatalError : BaseError {};
 struct AssertionError : FatalError {};
 

@@ -19,7 +19,8 @@ void World::add_component_to(std::shared_ptr<Entity> entity, Args&&... args) {
     ASSERT(entity && "Attempting to add component to expired entity.");
     auto comp = std::make_shared<T>(std::forward<Args>(args)...);
     entity->add_component(comp);
-    register_entity(*comp, std::weak_ptr<Entity>(entity));
+    register_component<T>(std::weak_ptr<T>(comp));
+    register_entity_with_component(*comp, std::weak_ptr<Entity>(entity));
 }
  
 template<typename T>
