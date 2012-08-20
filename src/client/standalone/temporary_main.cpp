@@ -23,22 +23,37 @@
 #include "systems/window.hpp"
 #include "utility.hpp"
 #include "world.hpp"
+#include "assert.hpp"
 #include <thread>
 #include <iostream>
 
 void server_do(std::unique_ptr<IByteSender>&& b_sender, std::unique_ptr<IByteReceiver>&& b_receiver) {
-    World world;
-    Sender sender(std::move(b_sender));
-    Receiver<World> receiver(world, std::move(b_receiver));
+    try {
+        World world;
+        Sender sender(std::move(b_sender));
+        Receiver<World> receiver(world, std::move(b_receiver));
+    }
+    catch (BaseError& e) {
+        print_diagnostic_info(std::cerr, e);
+        if (std::string const* err_msg_p = boost::get_error_info<err_msg>(e))
+            std::cerr << "Error: " << *err_msg_p << std::endl;
+    }
 }
 
 void client_do(std::unique_ptr<IByteSender>&& b_sender, std::unique_ptr<IByteReceiver>&& b_receiver) {
-    World world;
-    Sender sender(std::move(b_sender));
-    Receiver<World> receiver(world, std::move(b_receiver));
-    world.add_system<WindowSystem>();
-    for (;;)
-        world.update(1);
+    try {
+        World world;
+        Sender sender(std::move(b_sender));
+        Receiver<World> receiver(world, std::move(b_receiver));
+        world.add_system<WindowSystem>();
+        for (;;)
+            world.update(1);
+    }
+    catch (BaseError& e) {
+        print_diagnostic_info(std::cerr, e);
+        if (std::string const* err_msg_p = boost::get_error_info<err_msg>(e))
+            std::cerr << "Error: " << *err_msg_p << std::endl;
+    }
 }
 
 int main() {

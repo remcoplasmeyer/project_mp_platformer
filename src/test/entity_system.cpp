@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(ensure_component_is_registered) {
             BOOST_CHECK_EQUAL(p->x, 1);
         }
       public:
-        TestSystem(World& world) : world_(&world) {}
+        TestSystem(World& world) : System(world), world_(&world) {}
     };
     World world;
     world.add_system<TestSystem>();
