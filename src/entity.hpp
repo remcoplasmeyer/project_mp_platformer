@@ -34,7 +34,16 @@ class Entity : boost::noncopyable {
     template<typename T>
     void add_component(std::shared_ptr<T>);
 
-    // TODO: Functions for querying components.
+    //! Retrieve a single component of the given type.
+    //!
+    //! If no component of a given type exists, returns a default-constructed
+    //! shared pointer.  If multiple exist, any may be returned.
+    template<typename T>
+    std::shared_ptr<T> get_single();
+
+    //! Retrieve all components of a given type.
+    template<typename T>
+    ComponentList<std::shared_ptr<T>>& get_components();
 };
 
 #include "world.hpp"
@@ -46,3 +55,15 @@ void Entity::add_component(std::shared_ptr<T> comp) {
     world_->register_component(std::weak_ptr<T>(comp));
 }
  
+template<typename T>
+std::shared_ptr<T> Entity::get_single() {
+    auto& list = component_lists_.get<T>();
+    if (list.empty())
+        return std::shared_ptr<T>();
+    return *list.begin();
+}
+
+template<typename T>
+ComponentList<std::shared_ptr<T>>& Entity::get_components() {
+    return component_lists_.get<T>();
+}

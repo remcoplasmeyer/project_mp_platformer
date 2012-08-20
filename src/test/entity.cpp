@@ -29,3 +29,20 @@ BOOST_AUTO_TEST_CASE(add_component_with_entity_awareness) {
     BOOST_CHECK_EQUAL(ep, e);
 }
 
+BOOST_AUTO_TEST_CASE(get_nonexistant_single_component) {
+    struct DummyComponent {};
+    World world;
+    auto entity = world.new_entity();
+    auto comp = entity->get_single<DummyComponent>();
+    BOOST_ASSERT(!comp);
+}
+
+BOOST_AUTO_TEST_CASE(get_existing_single_component) {
+    struct DummyComponent {};
+    World world;
+    auto entity = world.new_entity();
+    world.add_component_to<DummyComponent>(entity);
+    auto comp = entity->get_single<DummyComponent>();
+    BOOST_ASSERT(comp);
+}
+

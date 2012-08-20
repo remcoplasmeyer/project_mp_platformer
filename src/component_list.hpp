@@ -32,6 +32,10 @@ class ComponentList {
     ConstIterator end() const {
         return components_.end();
     }
+
+    bool empty() const {
+        return components_.empty();
+    }
 };
 
 template<typename T>
