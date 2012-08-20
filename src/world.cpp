@@ -1,9 +1,10 @@
 #include "world.hpp"
 #include "entity.hpp"
 
-Entity& World::new_entity() {
-    entities_.push_back(std::make_shared<Entity>(EntityCreationWorld(*this)));
-    return *entities_.back();
+std::shared_ptr<Entity> World::new_entity() {
+    auto entity = std::make_shared<Entity>(EntityCreationWorld(*this));
+    entities_.push_back(entity);
+    return entity;
 }
 
 void World::update(int deltat) {

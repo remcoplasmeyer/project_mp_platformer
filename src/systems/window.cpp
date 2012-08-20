@@ -8,7 +8,11 @@ WindowSystem::WindowSystem(World& w)
 
 void WindowSystem::do_update(int) {
     sf::Event event;
-    window_.pollEvent(event);
+    // Temporary solution to make the game exit when the window is closed.
+    if (!window_.isOpen())
+        BOOST_THROW_EXCEPTION(BaseError());
+    if (!window_.pollEvent(event))
+        return;
     if (event.type == sf::Event::Closed)
         window_.close();
 }

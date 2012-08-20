@@ -7,7 +7,7 @@
 //! Class used for the world register components with.
 template<typename T>
 class ComponentList {
-    typedef std::vector<std::weak_ptr<T>> ContainerType;
+    typedef std::vector<T> ContainerType;
     ContainerType components_;
 
   public:
@@ -15,7 +15,7 @@ class ComponentList {
     typedef typename ContainerType::const_iterator ConstIterator;
 
     //! Called by World to notify of a new component.
-    void add_component(std::weak_ptr<T>);
+    void add_component(T);
 
     Iterator begin() {
         return components_.begin();
@@ -35,7 +35,7 @@ class ComponentList {
 };
 
 template<typename T>
-void ComponentList<T>::add_component(std::weak_ptr<T> comp) {
+void ComponentList<T>::add_component(T comp) {
     components_.push_back(comp);
 }
  

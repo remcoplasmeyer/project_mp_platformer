@@ -34,6 +34,11 @@ void server_do(std::unique_ptr<IByteSender>&& b_sender, std::unique_ptr<IByteRec
         Receiver<World> receiver(world, std::move(b_receiver));
     }
     catch (BaseError& e) {
+        // Strictly speaking, this cleanup is not safe due to the possibility of
+        // client and server dying at the same time and seeing as std::cerr does
+        // not make thread safety guarantees we may mess up the output with
+        // this.  However, I'm not particularly eager to write a thread safe
+        // wrapper around std::iostream so I'll leave this as a TODO.
         print_diagnostic_info(std::cerr, e);
         if (std::string const* err_msg_p = boost::get_error_info<err_msg>(e))
             std::cerr << "Error: " << *err_msg_p << std::endl;
@@ -58,6 +63,8 @@ void client_do(std::unique_ptr<IByteSender>&& b_sender, std::unique_ptr<IByteRec
 
 int main() {
     LocalMessageQueue server_to_client, client_to_server;
-    std::thread(server_do, make_unique<LocalByteSender>(server_to_client), make_unique<LocalByteReceiver>(client_to_server)).detach();
-    std::thread(client_do, make_unique<LocalByteSender>(client_to_server), make_unique<LocalByteReceiver>(server_to_client)).join();
+    std::thread server(server_do, make_unique<LocalByteSender>(server_to_client), make_unique<LocalByteReceiver>(client_to_server));
+    std::thread client(client_do, make_unique<LocalByteSender>(client_to_server), make_unique<LocalByteReceiver>(server_to_client));
+    client.join();
+    server.join();
 }

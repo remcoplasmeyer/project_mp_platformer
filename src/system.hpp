@@ -13,6 +13,7 @@ class System : boost::noncopyable {
   public:
     System(World&);
     void update(int deltat);
+    World& get_world();
     virtual ~System();
 };
  

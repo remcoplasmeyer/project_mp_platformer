@@ -1,24 +1,21 @@
 #pragma once
 
 #include "assert.hpp"
+#include <memory>
 
 class Entity;
 
-class BaseComponent {
+class EntityTrackingComponent {
+    std::weak_ptr<Entity> entity_;
+  protected:
+    ~EntityTrackingComponent() {}
   public:
-    virtual ~BaseComponent() {}
-};
-
-class EntityTrackingComponent : public BaseComponent {
-    Entity* entity_;
-  public:
-    void set_entity(Entity& entity) {
-        ASSERT(!entity_ && "Attempted to set already-set entity.");
-        entity_ = &entity;
+    void set_entity(std::weak_ptr<Entity> entity) {
+        ASSERT(entity_.expired() && "Attempted to set already-set entity.");
+        entity_ = entity;
     }
 
-    Entity& get_entity() {
-        ASSERT(entity_ && "Attempted to retrieve entity before it is set.");
-        return *entity_;
+    std::weak_ptr<Entity> get_entity() {
+        return entity_;
     }
 };

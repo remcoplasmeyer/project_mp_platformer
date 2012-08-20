@@ -13,15 +13,14 @@ BOOST_AUTO_TEST_CASE(make_empty_entity) {
 
 
 BOOST_AUTO_TEST_CASE(ensure_component_is_registered) {
-    struct TestComponent : BaseComponent {
+    struct TestComponent {
         TestComponent() : x(0) {}
         int x;
     };
     class TestSystem : public System {
-        World* world_;
         void do_update(int) {
             // Can't use BOOST_CHECK_NE because the Iterator isn't printable.
-            auto& test_comps = world_->get_components<TestComponent>();
+            auto test_comps = get_world().get_components<TestComponent>();
             BOOST_ASSERT(test_comps.begin() != test_comps.end());
             auto it = test_comps.begin();
             BOOST_ASSERT(!it->expired());
@@ -32,12 +31,12 @@ BOOST_AUTO_TEST_CASE(ensure_component_is_registered) {
             BOOST_CHECK_EQUAL(p->x, 1);
         }
       public:
-        TestSystem(World& world) : System(world), world_(&world) {}
+        TestSystem(World& world) : System(world) {}
     };
     World world;
     world.add_system<TestSystem>();
-    auto& e = world.new_entity();
-    e.add_component<TestComponent>();
+    auto e = world.new_entity();
+    world.add_component_to<TestComponent>(e);
     world.update(1);
 }
 

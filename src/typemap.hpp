@@ -1,5 +1,6 @@
 #pragma once
 
+#include <boost/utility.hpp>
 #include <map>
 
 //! A map of types to values.

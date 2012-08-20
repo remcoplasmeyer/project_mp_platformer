@@ -1,14 +1,15 @@
 #pragma once
 
-#include "components/base.hpp"
-#include "world.hpp"
+#include "component_to_list_map.hpp"
 #include <boost/utility.hpp>
 #include <memory>
 #include <vector>
 
+class World;
+
 // Hack to make sure only new_entity can create Entities.
 class EntityCreationWorld {
-    friend Entity& World::new_entity();
+    friend class World;
     EntityCreationWorld(World& world) : world_(&world) {}
   public:
     World* world_;
@@ -20,18 +21,9 @@ class EntityCreationWorld {
 //! should not be invalidated.
 class Entity : boost::noncopyable {
     World* world_;
-    std::vector<std::shared_ptr<BaseComponent>> components_;
+    ComponentToListMap<std::shared_ptr> component_lists_;
 
-    template<typename T>
-    void register_entity(T& t, typename std::enable_if<std::is_base_of<EntityTrackingComponent, T>::value>::type* = nullptr) {
-        t.set_entity(*this);
-    }
 
-    template<typename T>
-    void register_entity(T&, typename std::enable_if<!std::is_base_of<EntityTrackingComponent, T>::value>::type* = nullptr) {
-        // Do nothing, component does not wish to be registered with.
-    }
-    
   public:
     //! Construct an entity residing in the given world.
     Entity(EntityCreationWorld);
@@ -39,17 +31,18 @@ class Entity : boost::noncopyable {
     //! Add a component to this entity.
     //!
     //! Arguments are passed on to the constructor of the component.
-    template<typename T, typename... Args>
-    void add_component(Args&&... args);
+    template<typename T>
+    void add_component(std::shared_ptr<T>);
 
     // TODO: Functions for querying components.
 };
+
+#include "world.hpp"
  
-template<typename T, typename... Args>
-void Entity::add_component(Args&&... args) {
-    auto comp = std::make_shared<T>(std::forward<Args>(args)...);
-    components_.push_back(comp);
-    register_entity(*comp);
+template<typename T>
+void Entity::add_component(std::shared_ptr<T> comp) {
+    ASSERT(comp && "Trying to add null component.");
+    component_lists_.get<T>().add_component(comp);
     world_->register_component(std::weak_ptr<T>(comp));
 }
  
