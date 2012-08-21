@@ -2,7 +2,7 @@
 #include "entity.hpp"
 
 std::shared_ptr<Entity> World::new_entity() {
-    auto entity = std::make_shared<Entity>(EntityCreationWorld(*this));
+    auto entity = std::make_shared<Entity>();
     entities_.push_back(entity);
     return entity;
 }

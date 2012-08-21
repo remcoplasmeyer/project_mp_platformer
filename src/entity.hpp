@@ -5,29 +5,15 @@
 #include <memory>
 #include <vector>
 
-class World;
-
-// Hack to make sure all creation of Entities happens through a world.
-class EntityCreationWorld {
-    friend class World;
-    EntityCreationWorld(World& world) : world_(&world) {}
-  public:
-    World* world_;
-};
-
 //! Represents any in-game object.
 //!
 //! Not copyable because we keep references to it that really
 //! should not be invalidated.
 class Entity : boost::noncopyable {
-    World* world_;
     ComponentToListMap<std::shared_ptr> component_lists_;
 
 
   public:
-    //! Construct an entity residing in the given world.
-    Entity(EntityCreationWorld);
-
     //! Add a component to this entity.
     //!
     //! Arguments are passed on to the constructor of the component.
@@ -46,8 +32,6 @@ class Entity : boost::noncopyable {
     ComponentList<std::shared_ptr<T>>& get_components();
 };
 
-#include "world.hpp"
- 
 template<typename T>
 void Entity::add_component(std::shared_ptr<T> comp) {
     ASSERT(comp && "Trying to add null component.");
