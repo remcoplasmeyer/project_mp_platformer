@@ -5,10 +5,10 @@
 
 class World;
 
-class WindowSystem : public System {
-    sf::Window window_;
+class EventSystem : public System {
+    sf::Window* window_;
   public:
-    WindowSystem(World&);
+    EventSystem(World&, sf::Window*);
   private:
     void do_update(int);
 };

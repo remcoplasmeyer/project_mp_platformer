@@ -20,10 +20,12 @@
 #include "network/local_byte_sender.hpp"
 #include "network/local_byte_receiver.hpp"
 #include "network/local_message_queue.hpp"
-#include "systems/window.hpp"
+#include "systems/draw.hpp"
+#include "systems/event.hpp"
 #include "utility.hpp"
 #include "world.hpp"
 #include "assert.hpp"
+#include <SFML/Window.hpp>
 #include <thread>
 #include <iostream>
 
@@ -50,8 +52,10 @@ void client_do(std::unique_ptr<IByteSender>&& b_sender, std::unique_ptr<IByteRec
         World world;
         Sender sender(std::move(b_sender));
         Receiver<World> receiver(world, std::move(b_receiver));
-        world.add_system<WindowSystem>();
-        for (;;)
+        sf::Window window(sf::VideoMode(800, 600), "Still haven't come up with a name");
+        world.add_system<EventSystem>(&window);
+        world.add_system<DrawSystem>(&window);
+        while (window.isOpen())
             world.update(1);
     }
     catch (BaseError& e) {
