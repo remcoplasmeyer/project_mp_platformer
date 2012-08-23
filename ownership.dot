@@ -1,0 +1,10 @@
+// Graph to visiualise dependencies.
+digraph {
+    // Normal line means awareness, bold line means ownership.
+    Systems -> World [style=dotted];
+    World -> Entities;
+    World -> Systems;
+    World -> Components [style=dotted];
+    Components -> Entities [style=dotted];
+    Entities -> Components;
+}
