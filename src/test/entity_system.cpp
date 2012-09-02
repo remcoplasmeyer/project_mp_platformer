@@ -19,24 +19,26 @@ BOOST_AUTO_TEST_CASE(ensure_component_is_registered) {
     };
     class TestSystem : public System {
         void do_update(int) {
-            // Can't use BOOST_CHECK_NE because the Iterator isn't printable.
-            auto test_comps = get_world().get_components<TestComponent>();
-            BOOST_ASSERT(test_comps.begin() != test_comps.end());
-            auto it = test_comps.begin();
-            BOOST_ASSERT(!it->expired());
-            auto p = it->lock();
-            BOOST_ASSERT(p);
-            BOOST_CHECK_EQUAL(p->x, 0);
-            p->x++;
-            BOOST_CHECK_EQUAL(p->x, 1);
+            (*num_updates_)++;
         }
       public:
-        TestSystem(World& world) : System(world) {}
+        int* num_updates_;
+        TestSystem(World& world, int* num_updates)
+            : System(world), num_updates_(num_updates) {}
     };
     World world;
-    world.add_system<TestSystem>();
+    int num_updates = 0;
+    world.add_system<TestSystem>(&num_updates);
     auto e = world.new_entity();
     world.add_component_to<TestComponent>(e);
     world.update(1);
+    BOOST_CHECK_EQUAL(num_updates, 1);
+    auto test_comps = world.get_components<TestComponent>();
+    BOOST_ASSERT(test_comps.begin() != test_comps.end());
+    auto it = test_comps.begin();
+    BOOST_ASSERT(!it->expired());
+    auto p = it->lock();
+    BOOST_CHECK_EQUAL(p->x, 0);
+    p->x++;
 }
 
