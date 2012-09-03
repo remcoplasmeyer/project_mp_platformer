@@ -1,14 +1,14 @@
 #pragma once
 
 #include "system.hpp"
-#include <SFML/Window.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 
 class World;
 
 class DrawSystem : public System {
-    sf::Window* window_;
+    sf::RenderWindow* window_;
   public:
-    DrawSystem(World&, sf::Window*);
+    DrawSystem(World&, sf::RenderWindow*);
   private:
     void do_update(int);
 };

@@ -22,11 +22,15 @@
 #include "network/local_message_queue.hpp"
 #include "systems/draw.hpp"
 #include "systems/event.hpp"
+#include "components/sprite.hpp"
+#include "components/player_controlled.hpp"
 #include "utility.hpp"
 #include "world.hpp"
 #include "assert.hpp"
 #include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 #include <thread>
+#include <functional>
 #include <iostream>
 
 void server_do(std::unique_ptr<IByteSender>&& b_sender, std::unique_ptr<IByteReceiver>&& b_receiver) {
@@ -52,9 +56,17 @@ void client_do(std::unique_ptr<IByteSender>&& b_sender, std::unique_ptr<IByteRec
         World world;
         Sender sender(std::move(b_sender));
         Receiver<World> receiver(world, std::move(b_receiver));
-        sf::Window window(sf::VideoMode(800, 600), "Still haven't come up with a name");
+        sf::RenderWindow window(sf::VideoMode(800, 600), "Still haven't come up with a name");
         world.add_system<EventSystem>(&window);
         world.add_system<DrawSystem>(&window);
+        // Some test code to make sure we can draw things.
+        sf::Image img;
+        img.create(20, 20, sf::Color(0xFF, 0xFF, 0xFF));
+        sf::Texture txtr;
+        txtr.loadFromImage(img);
+        auto e = world.new_entity();
+        world.add_component_to<SpriteComponent>(e, std::cref(txtr));
+        world.add_component_to<PlayerControlledComponent>(e);
         while (window.isOpen())
             world.update(1);
     }
