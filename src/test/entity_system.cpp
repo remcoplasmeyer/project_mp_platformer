@@ -34,8 +34,9 @@ BOOST_AUTO_TEST_CASE(ensure_component_is_registered) {
     world.update(1);
     BOOST_CHECK_EQUAL(num_updates, 1);
     auto test_comps = world.get_components<TestComponent>();
-    BOOST_ASSERT(test_comps.begin() != test_comps.end());
-    auto it = test_comps.begin();
+    BOOST_ASSERT(test_comps);
+    BOOST_ASSERT(test_comps->begin() != test_comps->end());
+    auto it = test_comps->begin();
     BOOST_ASSERT(!it->expired());
     auto p = it->lock();
     BOOST_CHECK_EQUAL(p->x, 0);

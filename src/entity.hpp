@@ -29,7 +29,7 @@ class Entity : boost::noncopyable {
 
     //! Retrieve all components of a given type.
     template<typename T>
-    ComponentList<std::shared_ptr<T>>& get_components();
+    ComponentList<std::shared_ptr<T>> const* get_components() const;
 };
 
 template<typename T>
@@ -40,13 +40,13 @@ void Entity::add_component(std::shared_ptr<T> comp) {
  
 template<typename T>
 std::shared_ptr<T> Entity::get_single() {
-    auto& list = component_lists_.get<T>();
-    if (list.empty())
+    auto list = component_lists_.cget<T>();
+    if (!list || list->empty())
         return std::shared_ptr<T>();
-    return *list.begin();
+    return *list->begin();
 }
 
 template<typename T>
-ComponentList<std::shared_ptr<T>>& Entity::get_components() {
-    return component_lists_.get<T>();
+ComponentList<std::shared_ptr<T>> const* Entity::get_components() const {
+    return component_lists_.cget<T>();
 }

@@ -13,13 +13,13 @@ class TypeMap : boost::noncopyable {
     typedef void (*destruct_func)(void*);
     class TypeMapStaticInstance : boost::noncopyable {
         destruct_func destroy_;
-        std::map<TypeMap*, void*> map_;
+        std::map<TypeMap const*, void*> map_;
 
       public:
         TypeMapStaticInstance(destruct_func);
-        void*& get(TypeMap* tm);
-        void const* cget(TypeMap*) const;
-        void remove(TypeMap*);
+        void*& get(TypeMap const* tm);
+        void const* cget(TypeMap const*) const;
+        void remove(TypeMap const*);
     };
 
     template<typename T>
@@ -33,14 +33,14 @@ class TypeMap : boost::noncopyable {
       public:
         static TypeMapStaticInstance map_;
 
-        static T& get(TypeMap* p) {
+        static T& get(TypeMap const* p) {
             auto& element = map_.get(p);
             if (!element)
                 element = new T();
             return *static_cast<T*>(element);
         }
 
-        static T const* cget(TypeMap* p) {
+        static T const* cget(TypeMap const* p) {
             return static_cast<T const*>(map_.cget(p));
         }
     };

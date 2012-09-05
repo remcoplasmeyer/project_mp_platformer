@@ -53,8 +53,12 @@ class World {
     void add_system(Args...);
     
     //! Access a component list for a given type.
+    //!
+    //! This does not allow one to add or remove components, but does allow
+    //! their modification (very few systems need read-only access to
+    //! components, and very few need to add or remove them).
     template<typename T>
-    ComponentList<std::weak_ptr<T>>& get_components();
+    ComponentList<std::weak_ptr<T>> const* get_components() const;
 
     //! Add a component to an entity.
     template<typename T, typename... Args>

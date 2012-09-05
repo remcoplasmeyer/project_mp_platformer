@@ -11,7 +11,7 @@ void World::add_system(Args... args) {
 template<typename T>
 void World::register_component(std::weak_ptr<T> comp) {
     ASSERT(!comp.expired() && "Attempting to register an expired component.");
-    get_components<T>().add_component(comp);
+    component_lists_.get<T>().add_component(comp);
 }
 
 template<typename T, typename... Args>
@@ -24,7 +24,7 @@ void World::add_component_to(std::shared_ptr<Entity> entity, Args&&... args) {
 }
  
 template<typename T>
-ComponentList<std::weak_ptr<T>>& World::get_components() {
-    return component_lists_.get<T>();
+ComponentList<std::weak_ptr<T>> const* World::get_components() const {
+    return component_lists_.cget<T>();
 }
  

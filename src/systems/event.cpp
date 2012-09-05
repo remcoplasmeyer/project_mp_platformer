@@ -14,15 +14,19 @@ void react_Closed(World&, sf::Window& window, sf::Event const&) {
 }
 
 void react_MouseButtonPressed(World& w, sf::Window&, sf::Event const& e) {
-    auto& players = w.get_components<PlayerControlledComponent>();
-    for (auto& weak : players) {
+    auto players = w.get_components<PlayerControlledComponent>();
+    if (!players)
+        return;
+    for (auto& weak : *players) {
         auto player = weak.lock();
         if (!player)
             continue;
         auto entity = player->get_entity().lock();
         if (!entity)
             continue;
-        auto& sprite = *entity->get_single<SpriteComponent>();
+        auto sprite_p = entity->get_single<SpriteComponent>();
+        ASSERT(sprite_p && "Player has no sprite!");
+        auto& sprite = *sprite_p;
         sprite.setPosition(e.mouseButton.x, e.mouseButton.y);
     }
 }

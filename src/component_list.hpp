@@ -6,7 +6,7 @@
 
 //! Class used for the world register components with.
 template<typename T>
-class ComponentList {
+class ComponentList : boost::noncopyable {
     typedef std::vector<T> ContainerType;
     ContainerType components_;
 

@@ -10,8 +10,10 @@ DrawSystem::DrawSystem(World& world, sf::RenderWindow* window)
 void DrawSystem::do_update(int) {
     window_->clear();
     auto& w = get_world();
-    auto& sprites = w.get_components<SpriteComponent>();
-    for (auto& weak : sprites) {
+    auto sprites = w.get_components<SpriteComponent>();
+    if (!sprites)
+        return;
+    for (auto& weak : *sprites) {
         auto sprite = weak.lock();
         if (!sprite)
             continue;

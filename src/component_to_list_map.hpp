@@ -16,4 +16,9 @@ class ComponentToListMap : boost::noncopyable {
     ComponentList<WrapType<T>>& get() {
         return map_.get<ComponentList<WrapType<T>>>();
     }
+
+    template<typename T>
+    ComponentList<WrapType<T>> const* cget() const {
+        return map_.cget<ComponentList<WrapType<T>>>();
+    }
 };
