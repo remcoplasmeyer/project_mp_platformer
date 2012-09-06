@@ -4,7 +4,7 @@
 
 class World;
 
-class System : boost::noncopyable {
+class ISystem : boost::noncopyable {
     World* world_;
   private:
     //! Called every step with deltat time since last call.
@@ -18,7 +18,7 @@ class System : boost::noncopyable {
     //!
     //! Hm, it would help if we enforced that the world had to create this.
     //! World is becoming a bit of a god class now.
-    System(World&);
+    ISystem(World&);
 
     //! Forwarding function for do_update.
     //!
@@ -28,6 +28,6 @@ class System : boost::noncopyable {
     //! Returns the world this system is operating on.
     World& get_world();
 
-    virtual ~System();
+    virtual ~ISystem() = default;
 };
  

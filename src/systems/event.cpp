@@ -42,7 +42,7 @@ std::map<sf::Event::EventType, EventFunc> const event_reactions {
 } // -- end anon namespace
 
 EventSystem::EventSystem(World& world, sf::Window* window)
-    : System(world), window_(window) {
+    : ISystem(world), window_(window) {
 }
 
 void EventSystem::do_update(int) {

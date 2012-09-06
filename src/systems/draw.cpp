@@ -4,7 +4,7 @@
 
 // TODO:  Allow all this to be configured.
 DrawSystem::DrawSystem(World& world, sf::RenderWindow* window)
-    : System(world), window_(window) {
+    : ISystem(world), window_(window) {
 }
 
 void DrawSystem::do_update(int) {

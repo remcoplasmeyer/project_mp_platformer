@@ -14,7 +14,7 @@ class Entity;
 class World {
     ComponentToListMap<std::weak_ptr> component_lists_;
  
-    boost::ptr_vector<System> systems_;
+    boost::ptr_vector<ISystem> systems_;
     std::vector<std::shared_ptr<Entity>> entities_;
 
     //! Offer the component a weak_ptr to the entity.

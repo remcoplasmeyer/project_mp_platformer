@@ -17,14 +17,14 @@ BOOST_AUTO_TEST_CASE(ensure_component_is_registered) {
         TestComponent() : x(0) {}
         int x;
     };
-    class TestSystem : public System {
+    class TestSystem : public ISystem {
         void do_update(int) {
             (*num_updates_)++;
         }
       public:
         int* num_updates_;
         TestSystem(World& world, int* num_updates)
-            : System(world), num_updates_(num_updates) {}
+            : ISystem(world), num_updates_(num_updates) {}
     };
     World world;
     int num_updates = 0;

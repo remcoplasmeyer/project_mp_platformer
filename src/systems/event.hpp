@@ -5,7 +5,7 @@
 
 class World;
 
-class EventSystem : public System {
+class EventSystem : public ISystem {
     sf::Window* window_;
   public:
     EventSystem(World&, sf::Window*);

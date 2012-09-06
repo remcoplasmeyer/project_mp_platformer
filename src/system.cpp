@@ -1,14 +1,12 @@
 #include "system.hpp"
 #include "world.hpp"
 
-System::System(World& w) : world_(&w) {}
+ISystem::ISystem(World& w) : world_(&w) {}
 
-void System::update(int deltat) {
+void ISystem::update(int deltat) {
     do_update(deltat);
 }
 
-World& System::get_world() {
+World& ISystem::get_world() {
     return *world_;
 }
-
-System::~System() {}

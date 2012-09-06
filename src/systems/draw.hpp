@@ -5,7 +5,7 @@
 
 class World;
 
-class DrawSystem : public System {
+class DrawSystem : public ISystem {
     sf::RenderWindow* window_;
   public:
     DrawSystem(World&, sf::RenderWindow*);
