@@ -22,6 +22,7 @@
 #include "network/local_message_queue.hpp"
 #include "systems/draw.hpp"
 #include "systems/event.hpp"
+#include "systems/physics.hpp"
 #include "components/sprite.hpp"
 #include "components/player_controlled.hpp"
 #include "utility.hpp"
@@ -59,6 +60,7 @@ void client_do(std::unique_ptr<IByteSender>&& b_sender, std::unique_ptr<IByteRec
         sf::RenderWindow window(sf::VideoMode(800, 600), "Still haven't come up with a name");
         world.add_system<EventSystem>(&window);
         world.add_system<DrawSystem>(&window);
+        world.add_system<PhysicsSystem>();
         // Some test code to make sure we can draw things.
         sf::Image img;
         img.create(20, 20, sf::Color(0xFF, 0xFF, 0xFF));
