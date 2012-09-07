@@ -8,6 +8,6 @@ class PhysicsSystem : public ISystem {
   public:
     PhysicsSystem(World&);
   private:
-    void do_update(int);
+    void do_update(float);
 };
 

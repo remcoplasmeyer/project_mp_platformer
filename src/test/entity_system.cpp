@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_CASE(ensure_component_is_registered) {
         int x;
     };
     class TestSystem : public ISystem {
-        void do_update(int) {
+        void do_update(float) {
             (*num_updates_)++;
         }
       public:

@@ -7,7 +7,7 @@ DrawSystem::DrawSystem(World& world, sf::RenderWindow* window)
     : ISystem(world), window_(window) {
 }
 
-void DrawSystem::do_update(int) {
+void DrawSystem::do_update(float) {
     window_->clear();
     auto& w = get_world();
     auto sprites = w.get_components<SpriteComponent>();

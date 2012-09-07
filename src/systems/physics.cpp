@@ -7,7 +7,7 @@
 
 namespace {
 
-void update_one_entity(PhysicalComponent& p) {
+void update_one_entity(PhysicalComponent& p, float deltat) {
     auto entity = p.get_entity().lock();
     if (!entity)
         return;
@@ -18,8 +18,8 @@ void update_one_entity(PhysicalComponent& p) {
             [&](sf::Vector2<float> lhs, decltype(*forces->begin()) rhs) {
                 return lhs + rhs->force;
             });
-    p.velocity += total_force / p.mass;
-    p.position += p.velocity;
+    p.velocity += deltat * total_force / p.mass;
+    p.position += deltat * p.velocity;
 }
 
 } // end anon namespace
@@ -27,11 +27,11 @@ void update_one_entity(PhysicalComponent& p) {
 PhysicsSystem::PhysicsSystem(World& world)
     : ISystem(world) {}
 
-void PhysicsSystem::do_update(int) {
+void PhysicsSystem::do_update(float deltat) {
     auto components = get_world().get_components<PhysicalComponent>();
     if (!components)
         return;
     for (auto& component : *components)
         if (auto p = component.lock())
-            update_one_entity(*p);
+            update_one_entity(*p, deltat);
 }

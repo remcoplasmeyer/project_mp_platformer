@@ -10,5 +10,5 @@ class EventSystem : public ISystem {
   public:
     EventSystem(World&, sf::Window*);
   private:
-    void do_update(int);
+    void do_update(float);
 };

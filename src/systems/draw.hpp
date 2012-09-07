@@ -10,5 +10,5 @@ class DrawSystem : public ISystem {
   public:
     DrawSystem(World&, sf::RenderWindow*);
   private:
-    void do_update(int);
+    void do_update(float);
 };

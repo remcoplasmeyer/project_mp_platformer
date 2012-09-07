@@ -45,7 +45,7 @@ EventSystem::EventSystem(World& world, sf::Window* window)
     : ISystem(world), window_(window) {
 }
 
-void EventSystem::do_update(int) {
+void EventSystem::do_update(float) {
     ASSERT(window_->isOpen() && "Update on closed screen performed.");
     sf::Event event;
     if (!window_->pollEvent(event))

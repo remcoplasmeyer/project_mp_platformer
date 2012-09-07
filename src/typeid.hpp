@@ -3,26 +3,6 @@
 // Own implementation of static type identity because the default one is
 // non-copyable and thus storing it in ForceComponent doesn't work very well.
 
-namespace typeid_detail {
-
-class TypeIdData {
-    template<typename T>
-    friend class TypeId;
-    TypeIdData() = default;
-    TypeIdData(TypeIdData const&) = delete;
-    void operator=(TypeIdData const&) = delete;
-};
-
-template<typename T>
-struct TypeIdImpl {
-    static TypeIdData const data;
-};
-
-template<typename T>
-TypeIdData const TypeIdImpl<T>::data;
-
-} // end namespace detail
-
 class TypeId {
     template<typename T>
     struct TypeIdImpl {

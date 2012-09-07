@@ -12,7 +12,7 @@ class ISystem : boost::noncopyable {
     //! The time is given in microseconds.
     //!
     //! TODO: Enforce this using chrono?
-    virtual void do_update(int deltat) = 0;
+    virtual void do_update(float deltat) = 0;
   public:
     //! Associate this system with the given world.
     //!
@@ -23,7 +23,7 @@ class ISystem : boost::noncopyable {
     //! Forwarding function for do_update.
     //!
     //! Makes sure, amongst other things, that deltat is sane.
-    void update(int deltat);
+    void update(float deltat);
 
     //! Returns the world this system is operating on.
     World& get_world();
