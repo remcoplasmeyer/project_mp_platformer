@@ -14,12 +14,12 @@ void update_one_entity(PhysicalComponent& p, float deltat) {
     auto forces = entity->get_components<ForceComponent>();
     if (!forces)
         return;
-    auto total_force = std::accumulate(forces->begin(), forces->end(), sf::Vector2<float>(), 
-            [&](sf::Vector2<float> lhs, decltype(*forces->begin()) rhs) {
+    auto total_force = std::accumulate(forces->begin(), forces->end(), sf::Vector2f(), 
+            [&](sf::Vector2f lhs, decltype(*forces->begin()) rhs) {
                 return lhs + rhs->force;
             });
-    p.velocity += deltat * total_force / p.mass;
-    p.position += deltat * p.velocity;
+    p.add_to_velocity(deltat * total_force * p.get_inverse_mass());
+    p.add_to_position(deltat * p.get_velocity());
 }
 
 } // end anon namespace

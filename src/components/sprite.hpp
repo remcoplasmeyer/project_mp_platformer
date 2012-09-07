@@ -12,7 +12,8 @@ struct SpriteComponent : EntityTrackingComponent {
   public:
     SpriteComponent(sf::Texture const&);
     SpriteComponent(sf::Texture const&, sf::IntRect const&);
-    void setPosition(float, float);
-    void setPosition(sf::Vector2f const&);
+    void set_position(float, float);
+    void set_position(sf::Vector2f const&);
+    sf::Vector2f const& get_position() const;
     operator sf::Drawable const&() const;
 };

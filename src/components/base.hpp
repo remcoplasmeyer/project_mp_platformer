@@ -15,7 +15,7 @@ class EntityTrackingComponent {
         entity_ = entity;
     }
 
-    std::weak_ptr<Entity> get_entity() {
+    std::weak_ptr<Entity> get_entity() const {
         return entity_;
     }
 };

@@ -27,7 +27,7 @@ void react_MouseButtonPressed(World& w, sf::Window&, sf::Event const& e) {
         auto sprite_p = entity->get_single<SpriteComponent>();
         ASSERT(sprite_p && "Player has no sprite!");
         auto& sprite = *sprite_p;
-        sprite.setPosition(e.mouseButton.x, e.mouseButton.y);
+        sprite.set_position(e.mouseButton.x, e.mouseButton.y);
     }
 }
 
