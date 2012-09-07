@@ -13,4 +13,4 @@ src/mapeditor	[MAPEDITOR]
 
 
 
-remco's first text edit in linux
+remco's second text edit in linux
