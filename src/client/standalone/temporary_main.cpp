@@ -28,11 +28,13 @@
 #include "utility.hpp"
 #include "world.hpp"
 #include "assert.hpp"
+#include "map.hpp"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <thread>
 #include <functional>
 #include <iostream>
+#include <boost/filesystem.hpp>
 
 void server_do(std::unique_ptr<IByteSender>&& b_sender, std::unique_ptr<IByteReceiver>&& b_receiver) {
     try {
@@ -80,6 +82,7 @@ void client_do(std::unique_ptr<IByteSender>&& b_sender, std::unique_ptr<IByteRec
 }
 
 int main() {
+	Map map(std::string("examplemap.map"));
     LocalMessageQueue server_to_client, client_to_server;
     std::thread server(server_do, make_unique<LocalByteSender>(server_to_client), make_unique<LocalByteReceiver>(client_to_server));
     std::thread client(client_do, make_unique<LocalByteSender>(client_to_server), make_unique<LocalByteReceiver>(server_to_client));

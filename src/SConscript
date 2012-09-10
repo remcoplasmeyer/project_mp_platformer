@@ -10,7 +10,7 @@ test_sources = Glob('test/*.cpp') + core_sources
 
 # Temporary hack to get rid of double action error.
 # Will fix by turning most of the program into a static library.
-env.MergeFlags({'LIBS': ['boost_unit_test_framework', 'sfml-window', 'sfml-graphics']})
+env.MergeFlags({'LIBS': ['boost_unit_test_framework', 'sfml-window', 'sfml-graphics', 'boost_system', 'boost_filesystem']})
 
 env.Program(''.join(['#bin/', prefix, 'client']), client_sources)
 env.Program(''.join(['#bin/', prefix, 'server']), server_sources)
