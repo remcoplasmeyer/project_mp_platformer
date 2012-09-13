@@ -1,6 +1,5 @@
 #pragma once
 
-#include "assert.hpp"
 #include <boost/utility.hpp>
 #include <set>
 #include <map>
