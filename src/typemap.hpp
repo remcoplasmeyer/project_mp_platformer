@@ -1,5 +1,6 @@
 #pragma once
 
+#include "assert.hpp"
 #include <boost/utility.hpp>
 #include <set>
 #include <map>
@@ -9,42 +10,57 @@
 //! Associative container which allows mapping of types to values of that
 //! type.
 class TypeMap : boost::noncopyable {
-    typedef void (*destruct_func)(void*);
-    class TypeMapStaticInstance : boost::noncopyable {
-        destruct_func destroy_;
-        std::map<TypeMap const*, void*> map_;
+    class TypeMapStaticBase : boost::noncopyable {
+        virtual void do_remove(TypeMap const*) = 0;
+      protected:
+        ~TypeMapStaticBase() = default;
+      public:
+        void remove(TypeMap const* p) {
+            ASSERT(p);
+            do_remove(p);
+        }
+    };
+
+    template<typename T>
+    class TypeMapStaticInstance : public TypeMapStaticBase {
+        std::map<TypeMap const*, T> map_;
+        
+        void do_remove(TypeMap const* tm) {
+            map_.erase(tm);
+        }
 
       public:
-        TypeMapStaticInstance(destruct_func);
-        void*& get(TypeMap const* tm);
-        void const* cget(TypeMap const*) const;
-        void remove(TypeMap const*);
+        T& get(TypeMap const* tm) {
+            // Should probably be rewritten to use emplace when GCC supports it.
+            return map_[tm];
+        }
+
+        T const* cget(TypeMap const* tm) const {
+            auto element = map_.find(tm);
+            if (element != map_.end())
+                return &element->second;
+            return nullptr;
+        }
+
     };
 
     template<typename T>
     class TypeMapDetail {
         TypeMapDetail() = delete;
 
-        static void destroy_impl(void* p) {
-            delete static_cast<T*>(p);
-        }
-
       public:
-        static TypeMapStaticInstance map_;
+        static TypeMapStaticInstance<T> map_;
 
         static T& get(TypeMap const* p) {
-            auto& element = map_.get(p);
-            if (!element)
-                element = new T();
-            return *static_cast<T*>(element);
+            return map_.get(p);
         }
 
         static T const* cget(TypeMap const* p) {
-            return static_cast<T const*>(map_.cget(p));
+            return map_.cget(p);
         }
     };
 
-    std::set<TypeMapStaticInstance*> members_;
+    std::set<TypeMapStaticBase*> members_;
   public:
     //! Retrieve the data associated with the given type.
     template<typename T>
@@ -62,5 +78,5 @@ class TypeMap : boost::noncopyable {
 };
  
 template<typename T>
-TypeMap::TypeMapStaticInstance TypeMap::TypeMapDetail<T>::map_(TypeMap::TypeMapDetail<T>::destroy_impl);
+TypeMap::TypeMapStaticInstance<T> TypeMap::TypeMapDetail<T>::map_;
  

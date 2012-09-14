@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE(ensure_correct_destruction) {
     bool destructed = false;
     struct CheckDestruction {
         bool* d;
-        ~CheckDestruction() { *d = true; }
+        ~CheckDestruction() { if (d) *d = true; }
     };
     {
         TypeMap m;
