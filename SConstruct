@@ -1,5 +1,6 @@
-base_env = Environment(CPPFLAGS="-Wall -Wextra -Werror -std=c++11 -pedantic",
-                       CPPPATH='#src')
+base_env = Environment(CPPFLAGS="-stdlib=libc++ -Wall -Wextra -Werror -std=c++11 -pedantic -fsanitize=undefined",
+                       CPPPATH='#src',
+                       CXX='clang++')
 
 debug_env = base_env.Clone()
 debug_env.MergeFlags("-O0 -g")

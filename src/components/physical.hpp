@@ -4,7 +4,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <boost/utility.hpp>
 
-class SpriteComponent;
+struct SpriteComponent;
 
 struct PhysicalComponent : EntityTrackingComponent, boost::noncopyable {
     PhysicalComponent();

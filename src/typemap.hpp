@@ -24,7 +24,7 @@ class TypeMap : boost::noncopyable {
     template<typename T>
     class TypeMapStaticInstance : public TypeMapStaticBase {
         std::map<TypeMap const*, T> map_;
-        
+
         void do_remove(TypeMap const* tm) {
             map_.erase(tm);
         }
@@ -76,7 +76,7 @@ class TypeMap : boost::noncopyable {
 
     ~TypeMap();
 };
- 
+
 template<typename T>
 TypeMap::TypeMapStaticInstance<T> TypeMap::TypeMapDetail<T>::map_;
- 
+
